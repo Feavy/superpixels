@@ -12,7 +12,7 @@ import Germe from "./Germe";
   const ctx = canvas.getContext("2d")!;
   ctx.putImageData(image.data, 0, 0);
 
-  const m = 50;
+  const m = 20;
   const N = 20;
   const pixels = image.width * image.height;
   const S = Math.sqrt(pixels/N);
@@ -55,28 +55,24 @@ import Germe from "./Germe";
   } while(relocated && i < 50);
 
 
-  i = 0;
-
   function rand() {
     return Math.floor(Math.random()*255);
   }
 
   for(const germe of germes) {
-    i+=2;
     ctx.fillStyle = `rgb(${rand()}, ${rand()}, ${rand()}, 0.5)`;
     for(const pixel of germe.pixels) {
       ctx.fillRect(pixel.x, pixel.y, 1, 1);
     }
+  }
+  for(const germe of germes) {
     ctx.fillStyle = "red";
-    ctx.fillRect(germe.x, germe.y, 3, 3);
+    ctx.fillRect(germe.x, germe.y, 11, 11);
+    ctx.fillStyle = `rgb(${germe.rgb.r}, ${germe.rgb.g}, ${germe.rgb.b})`;
+    ctx.fillRect(germe.x, germe.y, 10, 10);
   }
 
-  for(let i = 0; i < image.width; i+=S) {
-    for(let j = 0; j < image.height; j+=S) {
-      ctx.fillRect(i, 0, 1, image.height);
-      ctx.fillRect(0, j, image.width, 1);
-    }
-  }
+  // Segmentation binaire
 })();
 
 export {};
