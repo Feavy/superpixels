@@ -23,13 +23,10 @@ export default class Germe extends Pixel {
     const y1 = this.y;
 
     const {x, y} = this.kmeans();
+
     this.set(this.image.pixel(x, y));
 
-    if(!equals(x1, x) || !equals(y1, y)) {
-      console.log(x1-x, y1-y);
-    }
-
-    return !equals(x1, x) || !equals(y1, y);
+    return true;
   }
 
   private kmeans() {

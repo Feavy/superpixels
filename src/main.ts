@@ -1,5 +1,4 @@
 import loadPPM from "./loadPPM";
-import Pixel from "./Pixel";
 import Germe from "./Germe";
 
 (async () => {
@@ -29,10 +28,6 @@ import Germe from "./Germe";
   let relocated = false;
   let i = 0;
 
-  const germe = germes[0];
-  const p1 = image.pixel(0, 1);
-  console.log(p1.distance(germe, m, S));
-
   do {
     relocated = false;
     for (let x = 0; x < image.width; x++) {
@@ -57,9 +52,8 @@ import Germe from "./Germe";
       relocated = relocated || r;
     }
     console.log("Iteration", i++);
-  } while(i < 50);
+  } while(relocated && i < 50);
 
-  const colors = ["alizarin", "amaranth", "amber", "amethyst", "apricot", "aqua", "aquamarine", "asparagus", "auburn", "azure", "beige", "bistre", "black", "blue", "blue-green", "blue-violet", "bondi-blue", "brass", "bronze", "brown", "buff", "burgundy", "camouflage-green", "caput-mortuum", "cardinal", "carmine", "carrot-orange", "celadon", "cerise", "cerulean", "champagne", "charcoal", "chartreuse", "cherry-blossom-pink", "chestnut", "chocolate", "cinnabar", "cinnamon", "cobalt", "copper", "coral", "corn", "cornflower", "cream", "crimson", "cyan", "dandelion", "denim", "ecru", "emerald", "eggplant", "falu-red", "fern-green", "firebrick", "flax", "forest-green", "french-rose", "fuchsia", "gamboge", "gold", "goldenrod", "green", "grey", "han-purple", "harlequin", "heliotrope", "hollywood-cerise", "indigo", "ivory", "jade", "kelly-green", "khaki", "lavender", "lawn-green", "lemon", "lemon-chiffon", "lilac", "lime", "lime-green", "linen", "magenta", "magnolia", "malachite", "maroon", "mauve", "midnight-blue", "mint-green", "misty-rose", "moss-green", "mustard", "myrtle", "navajo-white", "navy-blue", "ochre", "office-green", "olive", "olivine", "orange", "orchid", "papaya-whip", "peach", "pear", "periwinkle", "persimmon", "pine-green", "pink", "platinum", "plum", "powder-blue", "puce", "prussian-blue", "psychedelic-purple", "pumpkin", "purple", "quartz-grey", "raw-umber", "razzmatazz", "red", "robin-egg-blue", "rose", "royal-blue", "royal-purple", "ruby", "russet", "rust", "safety-orange", "saffron", "salmon", "sandy-brown", "sangria", "sapphire", "scarlet", "school-bus-yellow", "sea-green", "seashell", "sepia", "shamrock-green", "shocking-pink", "silver", "sky-blue", "slate-grey", "smalt", "spring-bud", "spring-green", "steel-blue", "tan", "tangerine", "taupe", "teal", "tenné-(tawny)", "terra-cotta", "thistle", "titanium-white", "tomato", "turquoise", "tyrian-purple", "ultramarine", "van-dyke-brown", "vermilion", "violet", "viridian", "wheat", "white", "wisteria", "yellow", "zucchini"];
 
   i = 0;
 
@@ -69,12 +63,19 @@ import Germe from "./Germe";
 
   for(const germe of germes) {
     i+=2;
-    ctx.fillStyle = `rgb(${rand()}, ${rand()}, ${rand()})`;
+    ctx.fillStyle = `rgb(${rand()}, ${rand()}, ${rand()}, 0.5)`;
     for(const pixel of germe.pixels) {
       ctx.fillRect(pixel.x, pixel.y, 1, 1);
     }
     ctx.fillStyle = "red";
     ctx.fillRect(germe.x, germe.y, 3, 3);
+  }
+
+  for(let i = 0; i < image.width; i+=S) {
+    for(let j = 0; j < image.height; j+=S) {
+      ctx.fillRect(i, 0, 1, image.height);
+      ctx.fillRect(0, j, image.width, 1);
+    }
   }
 })();
 
