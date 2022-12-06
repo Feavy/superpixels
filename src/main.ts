@@ -72,7 +72,42 @@ import Germe from "./Germe";
     ctx.fillRect(germe.x, germe.y, 10, 10);
   }
 
+
   // Segmentation binaire
+  let min = Infinity;
+  let max = -Infinity;
+
+  for(const g1 of germes) {
+    for(const g2 of germes) {
+      if(g1 === g2) {
+        continue;
+      }
+      const ds = g1.distanceColor(g2);
+      if(ds > max) {
+        max = ds; 
+      }
+      if(ds < min) {
+        min = ds;
+      }
+    }
+  }
+  console.log("Distance: ", min, max);
+  console.log("Avg: ", (min+max)/2);
+
+  let avg = (min+max)/2;
+
+  const c1: Set<Germe> = new Set();
+  const c2: Set<Germe> = new Set();
+
+  for(const g1 of germes) {
+    for(const g2 of germes) {
+      if(g1 === g2) {
+        continue;
+      }
+      const ds = g1.distanceColor(g2);
+
+    }
+  }
 })();
 
 export {};
