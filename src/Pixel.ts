@@ -17,6 +17,11 @@ export default class Pixel {
     return d_lab + m/S * d_xy;
   }
 
+  public distanceColor(other: Pixel) {
+    const d_lab = Math.sqrt(Math.pow(this.lab.l - other.lab.l, 2) + Math.pow(this.lab.a - other.lab.a, 2) + Math.pow(this.lab.b - other.lab.b, 2));
+    return d_lab;
+  }
+
   public constructor(public readonly image: PPMImage, x: number, y: number, r: number, g: number, b: number) {
     this.x = x;
     this.y = y;
