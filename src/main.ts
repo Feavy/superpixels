@@ -2,7 +2,7 @@ import loadPPM from "./loadPPM";
 import Germe from "./Germe";
 
 (async () => {
-  const image = await loadPPM('/images/D000.ppm');
+  const image = await loadPPM('/images/D001.ppm');
 
   const canvas = document.createElement("canvas");
   canvas.width = image.width;
@@ -74,38 +74,44 @@ import Germe from "./Germe";
 
 
   // Segmentation binaire
-  let min = Infinity;
-  let max = -Infinity;
+  let extrem1: Germe | undefined = undefined;
+  let extrem2: Germe | undefined = undefined;
 
-  for(const g1 of germes) {
-    for(const g2 of germes) {
-      if(g1 === g2) {
-        continue;
-      }
-      const ds = g1.distanceColor(g2);
-      if(ds > max) {
-        max = ds; 
-      }
-      if(ds < min) {
-        min = ds;
+  // get extrems germes in terms of color
+  for(const germe of germes) {
+    for(const germe2 of germes) {
+      if(germe !== germe2) {
+        const d = germe.distanceColor(germe2);
+        if(!extrem1 || d > extrem1.distanceColor(extrem2!)) {
+          extrem1 = germe;
+          extrem2 = germe2;
+        }
       }
     }
   }
-  console.log("Distance: ", min, max);
-  console.log("Avg: ", (min+max)/2);
 
-  let avg = (min+max)/2;
+  const c1: Germe[] = [];
+  const c2: Germe[] = [];
 
-  const c1: Set<Germe> = new Set();
-  const c2: Set<Germe> = new Set();
+  for(const germe of germes) {
+    if(germe.distanceColor(extrem1!) < germe.distanceColor(extrem2!)) {
+      c1.push(germe);
+    } else {
+      c2.push(germe);
+    }
+  }
 
-  for(const g1 of germes) {
-    for(const g2 of germes) {
-      if(g1 === g2) {
-        continue;
-      }
-      const ds = g1.distanceColor(g2);
+  ctx.fillStyle = "white";
+  for(const germe of c1) {
+    for(const pixel of germe.pixels) {
+      ctx.fillRect(pixel.x, pixel.y, 1, 1);
+    }
+  }
 
+  ctx.fillStyle = "black";
+  for(const germe of c2) {
+    for(const pixel of germe.pixels) {
+      ctx.fillRect(pixel.x, pixel.y, 1, 1);
     }
   }
 })();
