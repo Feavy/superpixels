@@ -21,6 +21,9 @@ export default class PPMImage {
   }
 
   public pixel(x: number, y: number): Pixel {
+    if(isNaN(x) || isNaN(y)) {
+      return this.pixels[0][0];
+    }
     return this.pixels[Math.floor(x)][Math.floor(y)];
     // const [r, g, b] = this.ctx.getImageData(x, y, 1, 1).data;
     // return new Pixel(this, x, y, r, g, b);

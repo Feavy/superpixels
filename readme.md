@@ -11,3 +11,20 @@
     N est le nombre de superpixels, plus on en met, plus la détection de contours sera précise mais le calcul sera plus long.
 
     On cherche ensuite les paramètres de manière empirique.
+
+Gradient = Dérivée
+
+une dérivée c'est une différence
+
+plus différence est grande plus la pente est grande
+
+dérivée par rapport au ligne et colonne
+
+ligne : on soustrait voisin du haut
+
+colonne : on soustrait par rapport au voisin de gauche
+
+Pour chaque centre : voisinage -1 -> +1
+
+On prend le point qui minimise le gradient au voisinage.
+

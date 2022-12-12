@@ -1,8 +1,10 @@
 import loadPPM from "./loadPPM";
 import Germe from "./Germe";
+import imgradient from "./imgradient";
 
 (async () => {
   const image = await loadPPM('/images/D001.ppm');
+  const gradient = imgradient(image);
 
   const canvas = document.createElement("canvas");
   canvas.width = image.width;
@@ -12,16 +14,31 @@ import Germe from "./Germe";
   const ctx = canvas.getContext("2d")!;
   ctx.putImageData(image.data, 0, 0);
 
-  const m = 10;
+  const m = 20;
   const N = 20;
   const pixels = image.width * image.height;
   const S = Math.sqrt(pixels/N);
 
   const germes: Germe[] = [];
 
-  for(let i = S/2; i < image.height; i+=S) {
-    for(let j = S/2; j < image.width; j+=S) {
-      germes.push(new Germe(image.pixel(j, i)));
+  // On place les germes sur une grille de côté S
+  for(let x = S/2; x < image.width; x+=S) {
+    for(let y = S/2; y < image.height; y+=S) {
+      // Vérifier que le germe n'est pas sur un bord grâce au gradient
+      // On sélectionne le minimum dans un voisinage 3x3
+
+      const min = gradient[x][y];
+      let position = {x, y};
+
+      for(let x2 = x-1; x2 <= x+1; x2++) {
+        for(let y2 = y-1; y2 <= y+1; y2++) {
+          if(gradient[x2][y2] < min) {
+            position = {x: x2, y: y2};
+          }
+        }
+      }
+
+      germes.push(new Germe(image.pixel(position.x, position.y)));
     }
   }
 
@@ -77,7 +94,7 @@ import Germe from "./Germe";
   let extrem1: Germe | undefined = undefined;
   let extrem2: Germe | undefined = undefined;
 
-  // get extrems germes in terms of color
+  // Obtenir les germes extrêmes en terme de couleur (les plus éloignées)
   for(const germe of germes) {
     for(const germe2 of germes) {
       const d = germe.distanceColor(germe2);
@@ -99,19 +116,33 @@ import Germe from "./Germe";
     }
   }
 
-  ctx.fillStyle = "white";
-  for(const germe of c1) {
-    for(const pixel of germe.pixels) {
-      ctx.fillRect(pixel.x, pixel.y, 1, 1);
-    }
-  }
+  // Pour afficher la segmentation :
 
-  ctx.fillStyle = "black";
-  for(const germe of c2) {
-    for(const pixel of germe.pixels) {
-      ctx.fillRect(pixel.x, pixel.y, 1, 1);
-    }
-  }
+  // ctx.fillStyle = "white";
+  // for(const germe of c1) {
+  //   for(const pixel of germe.pixels) {
+  //     ctx.fillRect(pixel.x, pixel.y, 1, 1);
+  //   }
+  // }
+
+  // ctx.fillStyle = "black";
+  // for(const germe of c2) {
+  //   for(const pixel of germe.pixels) {
+  //     ctx.fillRect(pixel.x, pixel.y, 1, 1);
+  //   }
+  // }
+
+  // Pour afficher le gradient :
+
+  // let min = Infinity;
+  // let max = -Infinity;
+  // for (let x = 0; x < image.width; x++) {
+  //   for (let y = 0; y < image.height; y++) {
+  //     const gray = Math.floor(gradient[x][y]*255/81);
+  //     ctx.fillStyle = `rgb(${gray}, ${gray}, ${gray}, 1)`;
+  //     ctx.fillRect(x, y, 1, 1);
+  //   }
+  // }
 })();
 
 export {};
