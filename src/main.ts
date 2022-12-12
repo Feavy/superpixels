@@ -12,7 +12,7 @@ import Germe from "./Germe";
   const ctx = canvas.getContext("2d")!;
   ctx.putImageData(image.data, 0, 0);
 
-  const m = 20;
+  const m = 10;
   const N = 20;
   const pixels = image.width * image.height;
   const S = Math.sqrt(pixels/N);
@@ -60,7 +60,7 @@ import Germe from "./Germe";
   }
 
   for(const germe of germes) {
-    ctx.fillStyle = `rgb(${rand()}, ${rand()}, ${rand()}, 0.5)`;
+    ctx.fillStyle = `rgb(${rand()}, ${rand()}, ${rand()}, 1)`;
     for(const pixel of germe.pixels) {
       ctx.fillRect(pixel.x, pixel.y, 1, 1);
     }
@@ -80,12 +80,10 @@ import Germe from "./Germe";
   // get extrems germes in terms of color
   for(const germe of germes) {
     for(const germe2 of germes) {
-      if(germe !== germe2) {
-        const d = germe.distanceColor(germe2);
-        if(!extrem1 || d > extrem1.distanceColor(extrem2!)) {
-          extrem1 = germe;
-          extrem2 = germe2;
-        }
+      const d = germe.distanceColor(germe2);
+      if(!extrem1 || d > extrem1.distanceColor(extrem2!)) {
+        extrem1 = germe;
+        extrem2 = germe2;
       }
     }
   }
